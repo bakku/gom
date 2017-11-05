@@ -4,3 +4,6 @@ DEST=cmd/gom/gom
 
 migrator:
 	$(GO) build -o $(DEST) $(SOURCE)
+
+test:
+	cd util && $(GO) test && cd ..
