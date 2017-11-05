@@ -1,6 +1,7 @@
 package util
 
 import (
+	"errors"
 	"io/ioutil"
 	"os"
 )
@@ -19,17 +20,37 @@ func (d *dirReader) Read() ([]os.FileInfo, error) {
 	return dirs, nil
 }
 
+type dirCheckerInterface interface {
+	DirExists() bool
+}
+
+type dirChecker struct{}
+
+
+func (d *dirChecker) DirExists() bool {
+	if _, err := os.Stat("db/migrations"); os.IsNotExist(err) {
+		return false
+	}
+	return true
+}
+
 type ExistingMigrationFetcher struct {
-	DirReader dirReaderInterface
+	DirReader  dirReaderInterface
+	DirChecker dirCheckerInterface
 }
 
 func NewExistingMigrationFetcher() *ExistingMigrationFetcher {
 	return &ExistingMigrationFetcher{
 		DirReader: &dirReader{},
+		DirChecker: &dirChecker{},
 	}
 }
 
 func (e *ExistingMigrationFetcher) Fetch() ([]string, error) {
+	if e.DirChecker.DirExists() == false {
+		return []string{}, errors.New("migration directory does not exist")
+	}
+
 	dirs, err := e.DirReader.Read()
 	if err != nil {
 		return []string{}, err

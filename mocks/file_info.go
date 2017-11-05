@@ -5,30 +5,30 @@ import (
 	"time"
 )
 
-type MockFileInfo struct {
+type FileInfo struct {
 	N string
 }
 
-func (m *MockFileInfo) Name() string {
+func (m *FileInfo) Name() string {
 	return m.N
 }
 
-func (m *MockFileInfo) Size() int64 {
+func (m *FileInfo) Size() int64 {
 	return 0
 }
 
-func (m *MockFileInfo) Mode() os.FileMode {
+func (m *FileInfo) Mode() os.FileMode {
 	return os.FileMode(1)
 }
 
-func (m *MockFileInfo) ModTime() time.Time {
+func (m *FileInfo) ModTime() time.Time {
 	return time.Now()
 }
 
-func (m *MockFileInfo) IsDir() bool {
+func (m *FileInfo) IsDir() bool {
 	return true
 }
 
-func (m *MockFileInfo) Sys() interface{} {
+func (m *FileInfo) Sys() interface{} {
 	return nil
 }
