@@ -1,9 +1,11 @@
-GO=go
+GO=@go
 SOURCE=cmd/gom/main.go
 DEST=cmd/gom/gom
+BASE_PKG=github.com/bakku/gom
 
 migrator:
 	$(GO) build -o $(DEST) $(SOURCE)
 
 test:
-	cd util && $(GO) test && cd ..
+	$(GO) test $(BASE_PKG)/util
+	$(GO) test $(BASE_PKG)/commands
