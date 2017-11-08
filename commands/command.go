@@ -12,7 +12,7 @@ type Command interface {
 func Select(command string) (Command, error) {
 	switch command {
 	case "generate":
-		return &Generator{}, nil
+		return NewGenerator(), nil
 	case "migrate":
 		return &Migrator{}, nil
 	case "init":
