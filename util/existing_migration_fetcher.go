@@ -5,14 +5,14 @@ import (
 )
 
 type ExistingMigrationFetcher struct {
-	DirReader  dirReaderInterface
-	DirChecker dirCheckerInterface
+	DirReader  DirReaderInterface
+	DirChecker DirCheckerInterface
 }
 
 func NewExistingMigrationFetcher() *ExistingMigrationFetcher {
 	return &ExistingMigrationFetcher{
-		DirReader: &dirReader{},
-		DirChecker: &dirChecker{},
+		DirReader: &DirReader{},
+		DirChecker: &DirChecker{},
 	}
 }
 

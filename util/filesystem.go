@@ -5,13 +5,13 @@ import (
 	"os"
 )
 
-type dirReaderInterface interface {
+type DirReaderInterface interface {
 	Read() ([]os.FileInfo, error)
 }
 
-type dirReader struct{}
+type DirReader struct{}
 
-func (d *dirReader) Read() ([]os.FileInfo, error) {
+func (d *DirReader) Read() ([]os.FileInfo, error) {
 	dirs, err := ioutil.ReadDir("db/migrations")
 	if err != nil {
 		return []os.FileInfo{}, err
@@ -19,17 +19,36 @@ func (d *dirReader) Read() ([]os.FileInfo, error) {
 	return dirs, nil
 }
 
-type dirCheckerInterface interface {
+type DirCheckerInterface interface {
 	DirExists() bool
 }
 
-type dirChecker struct{}
+type DirChecker struct{}
 
-
-func (d *dirChecker) DirExists() bool {
+func (d *DirChecker) DirExists() bool {
 	if _, err := os.Stat("db/migrations"); os.IsNotExist(err) {
 		return false
 	}
 	return true
 }
 
+type DirCreatorInterface interface {
+	DirCreate(path string) error
+}
+
+type DirCreator struct{}
+
+func (d *DirCreator) DirCreate(path string) error {
+	return os.MkdirAll(path, 0755)
+}
+
+type FileCreatorInterface interface {
+	FileCreate(path string) error
+}
+
+type FileCreator struct{}
+
+func (f *FileCreator) FileCreate(path string) error {
+	_, err := os.Create(path)
+	return err
+}
