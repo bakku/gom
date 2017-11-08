@@ -3,7 +3,7 @@ SOURCE=cmd/gom/main.go
 DEST=cmd/gom/gom
 BASE_PKG=github.com/bakku/gom
 
-migrator:
+gom:
 	$(GO) build -o $(DEST) $(SOURCE)
 
 test:
