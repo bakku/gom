@@ -11,7 +11,7 @@ type ExistingMigrationFetcher struct {
 
 func NewExistingMigrationFetcher() *ExistingMigrationFetcher {
 	return &ExistingMigrationFetcher{
-		DirReader: &DirReader{},
+		DirReader:  &DirReader{},
 		DirChecker: &DirChecker{},
 	}
 }

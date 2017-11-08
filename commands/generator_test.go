@@ -26,7 +26,7 @@ var _ = Describe("Generator", func() {
 			fileCreator.FileCreateCall.Returns.Errors.OnCall = -1
 
 			command := commands.Generator{
-				DirCreator: dirCreator,
+				DirCreator:  dirCreator,
 				FileCreator: fileCreator,
 			}
 
@@ -57,7 +57,7 @@ var _ = Describe("Generator", func() {
 			fileCreator.FileCreateCall.Returns.Errors.OnCall = -1
 
 			command := commands.Generator{
-				DirCreator: dirCreator,
+				DirCreator:  dirCreator,
 				FileCreator: fileCreator,
 			}
 
@@ -81,7 +81,7 @@ var _ = Describe("Generator", func() {
 			fileCreator.FileCreateCall.Returns.Errors.Error = errors.New("error")
 
 			command := commands.Generator{
-				DirCreator: dirCreator,
+				DirCreator:  dirCreator,
 				FileCreator: fileCreator,
 			}
 
@@ -98,7 +98,7 @@ var _ = Describe("Generator", func() {
 			fileCreator.FileCreateCall.Returns.Errors.Error = errors.New("error")
 
 			command := commands.Generator{
-				DirCreator: dirCreator,
+				DirCreator:  dirCreator,
 				FileCreator: fileCreator,
 			}
 

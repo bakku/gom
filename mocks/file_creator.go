@@ -5,12 +5,12 @@ type FileCreator struct {
 		Returns struct {
 			Errors struct {
 				OnCall int
-				Error error
+				Error  error
 			}
 		}
 	}
 	ReceivedPaths []string
-	callCounter int
+	callCounter   int
 }
 
 func (f *FileCreator) FileCreate(path string) error {
