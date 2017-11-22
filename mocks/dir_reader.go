@@ -13,6 +13,6 @@ type DirReader struct {
 	}
 }
 
-func (m *DirReader) Read() ([]os.FileInfo, error) {
+func (m *DirReader) Read(path string) ([]os.FileInfo, error) {
 	return m.ReadCall.Returns.DirSlice, m.ReadCall.Returns.Error
 }

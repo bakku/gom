@@ -17,11 +17,11 @@ func NewExistingMigrationFetcher() *ExistingMigrationFetcher {
 }
 
 func (e *ExistingMigrationFetcher) Fetch() ([]string, error) {
-	if e.DirChecker.DirExists() == false {
+	if e.DirChecker.DirExists("db/migrations") == false {
 		return []string{}, errors.New("migration directory does not exist")
 	}
 
-	dirs, err := e.DirReader.Read()
+	dirs, err := e.DirReader.Read("db/migrations")
 	if err != nil {
 		return []string{}, err
 	}

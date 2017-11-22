@@ -8,6 +8,6 @@ type DirChecker struct {
 	}
 }
 
-func (d *DirChecker) DirExists() bool {
+func (d *DirChecker) DirExists(path string) bool {
 	return d.DirExistsCall.Returns.Bool
 }

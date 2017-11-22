@@ -6,13 +6,13 @@ import (
 )
 
 type DirReaderInterface interface {
-	Read() ([]os.FileInfo, error)
+	Read(path string) ([]os.FileInfo, error)
 }
 
 type DirReader struct{}
 
-func (d *DirReader) Read() ([]os.FileInfo, error) {
-	dirs, err := ioutil.ReadDir("db/migrations")
+func (d *DirReader) Read(path string) ([]os.FileInfo, error) {
+	dirs, err := ioutil.ReadDir(path)
 	if err != nil {
 		return []os.FileInfo{}, err
 	}
@@ -20,12 +20,12 @@ func (d *DirReader) Read() ([]os.FileInfo, error) {
 }
 
 type DirCheckerInterface interface {
-	DirExists() bool
+	DirExists(path string) bool
 }
 
 type DirChecker struct{}
 
-func (d *DirChecker) DirExists() bool {
+func (d *DirChecker) DirExists(path string) bool {
 	if _, err := os.Stat("db/migrations"); os.IsNotExist(err) {
 		return false
 	}
