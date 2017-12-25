@@ -3,7 +3,7 @@ package mocks
 type DirCreator struct {
 	DirCreateCall struct {
 		Receives struct {
-			Path string
+			Path []string
 		}
 		Returns struct {
 			Error error
@@ -12,7 +12,7 @@ type DirCreator struct {
 }
 
 func (d *DirCreator) DirCreate(path string) error {
-	d.DirCreateCall.Receives.Path = path
+	d.DirCreateCall.Receives.Path = append(d.DirCreateCall.Receives.Path, path)
 
 	return d.DirCreateCall.Returns.Error
 }

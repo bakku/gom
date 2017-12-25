@@ -34,6 +34,9 @@ var _ = Describe("Generator", func() {
 
 			Expect(err).NotTo(HaveOccurred())
 			Expect(dirCreator.DirCreateCall.Receives.Path).
+				To(HaveLen(1))
+
+			Expect(dirCreator.DirCreateCall.Receives.Path[0]).
 				To(MatchRegexp("^db/migrations/\\d{14}_create_users_table$"))
 		})
 
