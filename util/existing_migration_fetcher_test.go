@@ -16,8 +16,8 @@ var _ = Describe("ExistingMigrationFetcher", func() {
 		Context("If dir does not exist", func() {
 			It("should return an error", func() {
 				mockDirReader := &mocks.DirReader{}
-				mockDirChecker := &mocks.DirChecker{}
-				mockDirChecker.DirExistsCall.Returns.Bool = false
+				mockDirChecker := &mocks.FileDirChecker{}
+				mockDirChecker.FileDirExistsCall.Returns.Bool = false
 
 				fetcher := &util.ExistingMigrationFetcher{
 					DirReader:  mockDirReader,
@@ -49,8 +49,8 @@ var _ = Describe("ExistingMigrationFetcher", func() {
 					}
 					mockDirReader.ReadCall.Returns.Error = nil
 
-					mockDirChecker := &mocks.DirChecker{}
-					mockDirChecker.DirExistsCall.Returns.Bool = true
+					mockDirChecker := &mocks.FileDirChecker{}
+					mockDirChecker.FileDirExistsCall.Returns.Bool = true
 
 					fetcher := &util.ExistingMigrationFetcher{
 						DirReader:  mockDirReader,
@@ -75,8 +75,8 @@ var _ = Describe("ExistingMigrationFetcher", func() {
 					mockDirReader.ReadCall.Returns.DirSlice = []os.FileInfo{}
 					mockDirReader.ReadCall.Returns.Error = errors.New("error")
 
-					mockDirChecker := &mocks.DirChecker{}
-					mockDirChecker.DirExistsCall.Returns.Bool = true
+					mockDirChecker := &mocks.FileDirChecker{}
+					mockDirChecker.FileDirExistsCall.Returns.Bool = true
 
 					fetcher := &util.ExistingMigrationFetcher{
 						DirReader:  mockDirReader,

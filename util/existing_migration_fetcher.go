@@ -6,18 +6,18 @@ import (
 
 type ExistingMigrationFetcher struct {
 	DirReader  DirReaderInterface
-	DirChecker DirCheckerInterface
+	DirChecker FileDirCheckerInterface
 }
 
 func NewExistingMigrationFetcher() *ExistingMigrationFetcher {
 	return &ExistingMigrationFetcher{
 		DirReader:  &DirReader{},
-		DirChecker: &DirChecker{},
+		DirChecker: &FileDirChecker{},
 	}
 }
 
 func (e *ExistingMigrationFetcher) Fetch() ([]string, error) {
-	if e.DirChecker.DirExists("db/migrations") == false {
+	if e.DirChecker.FileDirExists("db/migrations") == false {
 		return []string{}, errors.New("migration directory does not exist")
 	}
 

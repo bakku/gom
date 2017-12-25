@@ -19,14 +19,14 @@ func (d *DirReader) Read(path string) ([]os.FileInfo, error) {
 	return dirs, nil
 }
 
-type DirCheckerInterface interface {
-	DirExists(path string) bool
+type FileDirCheckerInterface interface {
+	FileDirExists(path string) bool
 }
 
-type DirChecker struct{}
+type FileDirChecker struct{}
 
-func (d *DirChecker) DirExists(path string) bool {
-	if _, err := os.Stat("db/migrations"); os.IsNotExist(err) {
+func (d *FileDirChecker) FileDirExists(path string) bool {
+	if _, err := os.Stat(path); os.IsNotExist(err) {
 		return false
 	}
 	return true
