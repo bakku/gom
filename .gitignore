@@ -1,3 +1,4 @@
 vendor/
 cmd/gom/gom
-.env
+.env_dev
+.env_test
