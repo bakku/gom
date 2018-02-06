@@ -70,12 +70,12 @@ type FileAppenderInterface interface {
 type FileAppender struct{}
 
 func (f *FileAppender) Append(path, content string) error {
-	f, err := os.OpenFile(path, os.O_APPEND|os.O_WRONLY, 0644)
+	file, err := os.OpenFile(path, os.O_APPEND|os.O_WRONLY, 0644)
 	if err != nil {
 		return err
 	}
 
-	_, err := f.WriteString(content)
+	_, err = file.WriteString(content)
 	if err != nil {
 		return err
 	}
