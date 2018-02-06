@@ -14,10 +14,11 @@ CREATE TABLE IF NOT EXISTS schema_migrations (
 );
 `
 
-var baseSchemaFile string = `
-CREATE TABLE schema_migrations (
+var baseSchemaFile string =
+`CREATE TABLE schema_migrations (
 	migration CHAR(14)
 ) ;
+
 `
 
 type Initializer struct {
