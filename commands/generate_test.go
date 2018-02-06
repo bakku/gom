@@ -30,7 +30,7 @@ var _ = Describe("Generator", func() {
 
 			command := commands.Generator{
 				FileDirChecker: fileDirChecker,
-				FileAppender: fileAppender,
+				FileAppender:   fileAppender,
 				DirCreator:     dirCreator,
 				FileCreator:    fileCreator,
 			}
@@ -48,7 +48,6 @@ var _ = Describe("Generator", func() {
 
 			dirCreator := &mocks.DirCreator{}
 			fileCreator := &mocks.FileCreator{}
-
 
 			command := commands.Generator{
 				FileDirChecker: fileDirChecker,
@@ -74,7 +73,6 @@ var _ = Describe("Generator", func() {
 			dirCreator := &mocks.DirCreator{}
 			fileCreator := &mocks.FileCreator{}
 
-
 			command := commands.Generator{
 				FileDirChecker: fileDirChecker,
 				FileAppender:   fileAppender,
@@ -98,10 +96,9 @@ var _ = Describe("Generator", func() {
 			fileCreator := &mocks.FileCreator{}
 			fileCreator.FileCreateCall.Returns.Errors.OnCall = -1
 
-
 			command := commands.Generator{
 				FileDirChecker: fileDirChecker,
-				FileAppender: fileAppender,
+				FileAppender:   fileAppender,
 				DirCreator:     dirCreator,
 				FileCreator:    fileCreator,
 			}
@@ -127,7 +124,7 @@ var _ = Describe("Generator", func() {
 
 			command := commands.Generator{
 				FileDirChecker: fileDirChecker,
-				FileAppender: fileAppender,
+				FileAppender:   fileAppender,
 				DirCreator:     dirCreator,
 			}
 
@@ -147,10 +144,9 @@ var _ = Describe("Generator", func() {
 			fileCreator := &mocks.FileCreator{}
 			fileCreator.FileCreateCall.Returns.Errors.OnCall = -1
 
-
 			command := commands.Generator{
 				FileDirChecker: fileDirChecker,
-				FileAppender: fileAppender,
+				FileAppender:   fileAppender,
 				DirCreator:     dirCreator,
 				FileCreator:    fileCreator,
 			}
@@ -181,7 +177,7 @@ var _ = Describe("Generator", func() {
 
 			command := commands.Generator{
 				FileDirChecker: fileDirChecker,
-				FileAppender: fileAppender,
+				FileAppender:   fileAppender,
 				DirCreator:     dirCreator,
 				FileCreator:    fileCreator,
 			}
@@ -205,7 +201,7 @@ var _ = Describe("Generator", func() {
 
 			command := commands.Generator{
 				FileDirChecker: fileDirChecker,
-				FileAppender: fileAppender,
+				FileAppender:   fileAppender,
 				DirCreator:     dirCreator,
 				FileCreator:    fileCreator,
 			}
