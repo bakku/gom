@@ -9,8 +9,11 @@ import (
 	"github.com/bakku/gom/util"
 )
 
+const insertStmt = "INSERT INTO schema_migrations VALUES (\"%s\") ;\n"
+
 type Generator struct {
 	FileDirChecker util.FileDirCheckerInterface
+	FileAppender   util.FileAppenderInterface
 	DirCreator     util.DirCreatorInterface
 	FileCreator    util.FileCreatorInterface
 }
@@ -18,6 +21,7 @@ type Generator struct {
 func NewGenerator() *Generator {
 	return &Generator{
 		&util.FileDirChecker{},
+		&util.FileAppender{},
 		&util.DirCreator{},
 		&util.FileCreator{},
 	}
@@ -31,13 +35,33 @@ func (g *Generator) Run(args ...string) error {
 	currTime := time.Now()
 	timeFormatted := currTime.Format("20060102150405")
 
-	schemaPath := []string{"db", "schema.sql"}
+	if err := g.appendMigrationToSchema(timeFormatted); err != nil {
+		return err
+	}
 
-	if ok := g.FileDirChecker.FileDirExists(strings.Join(schemaPath, "/")); !ok {
+	if err := g.createMigrationFiles(timeFormatted, args[0]); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (g *Generator) appendMigrationToSchema(formattedTime string) error {
+	path := []string{"db", "schema.sql"}
+
+	if ok := g.FileDirChecker.FileDirExists(strings.Join(path, "/")); !ok {
 		return errors.New("generate: schema.sql file does not exist")
 	}
 
-	migrationDir := timeFormatted + "_" + args[0]
+	if err := g.FileAppender.Append(strings.Join(path, "/"), fmt.Sprintf(insertStmt, formattedTime)); err != nil {
+		return errors.New(fmt.Sprintf("generate: could not append new migration to schema.sql: %v", err))
+	}
+
+	return nil
+}
+
+func (g *Generator) createMigrationFiles(formattedTime, migrationName string) error {
+	migrationDir := formattedTime + "_" + migrationName
 
 	path := []string{"db", "migrations", migrationDir}
 

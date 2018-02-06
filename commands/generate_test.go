@@ -20,16 +20,66 @@ var _ = Describe("Generator", func() {
 		})
 
 		It("should return an error if schema.sql file does not exist", func() {
-			dirCreator := &mocks.DirCreator{}
-			fileCreator := &mocks.FileCreator{}
-
 			fileDirChecker := &mocks.FileDirChecker{}
 			fileDirChecker.FileDirExistsCall.Returns.Bool = false
 
+			fileAppender := &mocks.FileAppender{}
+
+			dirCreator := &mocks.DirCreator{}
+			fileCreator := &mocks.FileCreator{}
+
 			command := commands.Generator{
 				FileDirChecker: fileDirChecker,
-				DirCreator: dirCreator,
-				FileCreator: fileCreator,
+				FileAppender: fileAppender,
+				DirCreator:     dirCreator,
+				FileCreator:    fileCreator,
+			}
+
+			err := command.Run("create_users_table")
+
+			Expect(err).To(HaveOccurred())
+		})
+
+		It("should append new migration insert into schema.sql file", func() {
+			fileDirChecker := &mocks.FileDirChecker{}
+			fileDirChecker.FileDirExistsCall.Returns.Bool = true
+
+			fileAppender := &mocks.FileAppender{}
+
+			dirCreator := &mocks.DirCreator{}
+			fileCreator := &mocks.FileCreator{}
+
+
+			command := commands.Generator{
+				FileDirChecker: fileDirChecker,
+				FileAppender:   fileAppender,
+				DirCreator:     dirCreator,
+				FileCreator:    fileCreator,
+			}
+
+			err := command.Run("create_users_table")
+
+			Expect(err).NotTo(HaveOccurred())
+			Expect(fileAppender.AppendCall.Receives.Content).
+				To(MatchRegexp("INSERT INTO schema_migrations VALUES \\(\"\\d{14}\"\\) ;\n"))
+		})
+
+		It("should return an error if schema append returns an error", func() {
+			fileDirChecker := &mocks.FileDirChecker{}
+			fileDirChecker.FileDirExistsCall.Returns.Bool = true
+
+			fileAppender := &mocks.FileAppender{}
+			fileAppender.AppendCall.Returns.Error = errors.New("error")
+
+			dirCreator := &mocks.DirCreator{}
+			fileCreator := &mocks.FileCreator{}
+
+
+			command := commands.Generator{
+				FileDirChecker: fileDirChecker,
+				FileAppender:   fileAppender,
+				DirCreator:     dirCreator,
+				FileCreator:    fileCreator,
 			}
 
 			err := command.Run("create_users_table")
@@ -38,17 +88,22 @@ var _ = Describe("Generator", func() {
 		})
 
 		It("should try to create the correct directory", func() {
+			fileDirChecker := &mocks.FileDirChecker{}
+			fileDirChecker.FileDirExistsCall.Returns.Bool = true
+
+			fileAppender := &mocks.FileAppender{}
+
 			dirCreator := &mocks.DirCreator{}
 
 			fileCreator := &mocks.FileCreator{}
 			fileCreator.FileCreateCall.Returns.Errors.OnCall = -1
-			fileDirChecker := &mocks.FileDirChecker{}
-			fileDirChecker.FileDirExistsCall.Returns.Bool = true
+
 
 			command := commands.Generator{
 				FileDirChecker: fileDirChecker,
-				DirCreator:  dirCreator,
-				FileCreator: fileCreator,
+				FileAppender: fileAppender,
+				DirCreator:     dirCreator,
+				FileCreator:    fileCreator,
 			}
 
 			err := command.Run("create_users_table")
@@ -62,14 +117,18 @@ var _ = Describe("Generator", func() {
 		})
 
 		It("should return an error if an error occurred during the folder creation", func() {
-			dirCreator := &mocks.DirCreator{}
-			dirCreator.DirCreateCall.Returns.Error = errors.New("error")
 			fileDirChecker := &mocks.FileDirChecker{}
 			fileDirChecker.FileDirExistsCall.Returns.Bool = true
 
+			fileAppender := &mocks.FileAppender{}
+
+			dirCreator := &mocks.DirCreator{}
+			dirCreator.DirCreateCall.Returns.Error = errors.New("error")
+
 			command := commands.Generator{
 				FileDirChecker: fileDirChecker,
-				DirCreator: dirCreator,
+				FileAppender: fileAppender,
+				DirCreator:     dirCreator,
 			}
 
 			err := command.Run("create_users_table")
@@ -78,17 +137,22 @@ var _ = Describe("Generator", func() {
 		})
 
 		It("should try to create up.sql and down.sql", func() {
+			fileDirChecker := &mocks.FileDirChecker{}
+			fileDirChecker.FileDirExistsCall.Returns.Bool = true
+
+			fileAppender := &mocks.FileAppender{}
+
 			dirCreator := &mocks.DirCreator{}
 
 			fileCreator := &mocks.FileCreator{}
 			fileCreator.FileCreateCall.Returns.Errors.OnCall = -1
-			fileDirChecker := &mocks.FileDirChecker{}
-			fileDirChecker.FileDirExistsCall.Returns.Bool = true
+
 
 			command := commands.Generator{
 				FileDirChecker: fileDirChecker,
-				DirCreator:  dirCreator,
-				FileCreator: fileCreator,
+				FileAppender: fileAppender,
+				DirCreator:     dirCreator,
+				FileCreator:    fileCreator,
 			}
 
 			err := command.Run("create_users_table")
@@ -104,18 +168,22 @@ var _ = Describe("Generator", func() {
 		})
 
 		It("should return an error if an error occured during up.sql creation", func() {
+			fileDirChecker := &mocks.FileDirChecker{}
+			fileDirChecker.FileDirExistsCall.Returns.Bool = true
+
+			fileAppender := &mocks.FileAppender{}
+
 			dirCreator := &mocks.DirCreator{}
 
 			fileCreator := &mocks.FileCreator{}
 			fileCreator.FileCreateCall.Returns.Errors.OnCall = 1
 			fileCreator.FileCreateCall.Returns.Errors.Error = errors.New("error")
-			fileDirChecker := &mocks.FileDirChecker{}
-			fileDirChecker.FileDirExistsCall.Returns.Bool = true
 
 			command := commands.Generator{
 				FileDirChecker: fileDirChecker,
-				DirCreator:  dirCreator,
-				FileCreator: fileCreator,
+				FileAppender: fileAppender,
+				DirCreator:     dirCreator,
+				FileCreator:    fileCreator,
 			}
 
 			err := command.Run("create_users_table")
@@ -124,18 +192,22 @@ var _ = Describe("Generator", func() {
 		})
 
 		It("should return an error if an error occured during down.sql creation", func() {
+			fileDirChecker := &mocks.FileDirChecker{}
+			fileDirChecker.FileDirExistsCall.Returns.Bool = true
+
+			fileAppender := &mocks.FileAppender{}
+
 			dirCreator := &mocks.DirCreator{}
 
 			fileCreator := &mocks.FileCreator{}
 			fileCreator.FileCreateCall.Returns.Errors.OnCall = 2
 			fileCreator.FileCreateCall.Returns.Errors.Error = errors.New("error")
-			fileDirChecker := &mocks.FileDirChecker{}
-			fileDirChecker.FileDirExistsCall.Returns.Bool = true
 
 			command := commands.Generator{
 				FileDirChecker: fileDirChecker,
-				DirCreator:  dirCreator,
-				FileCreator: fileCreator,
+				FileAppender: fileAppender,
+				DirCreator:     dirCreator,
+				FileCreator:    fileCreator,
 			}
 
 			err := command.Run("create_users_table")
