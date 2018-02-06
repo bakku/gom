@@ -16,7 +16,7 @@ func Select(command string) (Command, error) {
 	case "migrate":
 		return &Migrator{}, nil
 	case "init":
-		return &Initializer{}, nil
+		return NewInitializer()
 	case "rollback":
 		return &Backroller{}, nil
 	default:

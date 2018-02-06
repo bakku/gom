@@ -52,3 +52,13 @@ func (f *FileCreator) FileCreate(path string) error {
 	_, err := os.Create(path)
 	return err
 }
+
+type FileWriterInterface interface {
+	Write(path, content string) error
+}
+
+type FileWriter struct{}
+
+func (f *FileWriter) Write(path, content string) error {
+	return ioutil.WriteFile(path, []byte(content), 0644)
+}
