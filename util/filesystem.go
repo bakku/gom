@@ -62,3 +62,23 @@ type FileWriter struct{}
 func (f *FileWriter) Write(path, content string) error {
 	return ioutil.WriteFile(path, []byte(content), 0644)
 }
+
+type FileAppenderInterface interface {
+	Append(path, content string) error
+}
+
+type FileAppender struct{}
+
+func (f *FileAppender) Append(path, content string) error {
+	f, err := os.OpenFile(path, os.O_APPEND|os.O_WRONLY, 0644)
+	if err != nil {
+		return err
+	}
+
+	_, err := f.WriteString(content)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
