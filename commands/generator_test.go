@@ -19,13 +19,34 @@ var _ = Describe("Generator", func() {
 			Expect(err).To(HaveOccurred())
 		})
 
+		It("should return an error if schema.sql file does not exist", func() {
+			dirCreator := &mocks.DirCreator{}
+			fileCreator := &mocks.FileCreator{}
+
+			fileDirChecker := &mocks.FileDirChecker{}
+			fileDirChecker.FileDirExistsCall.Returns.Bool = false
+
+			command := commands.Generator{
+				FileDirChecker: fileDirChecker,
+				DirCreator: dirCreator,
+				FileCreator: fileCreator,
+			}
+
+			err := command.Run("create_users_table")
+
+			Expect(err).To(HaveOccurred())
+		})
+
 		It("should try to create the correct directory", func() {
 			dirCreator := &mocks.DirCreator{}
 
 			fileCreator := &mocks.FileCreator{}
 			fileCreator.FileCreateCall.Returns.Errors.OnCall = -1
+			fileDirChecker := &mocks.FileDirChecker{}
+			fileDirChecker.FileDirExistsCall.Returns.Bool = true
 
 			command := commands.Generator{
+				FileDirChecker: fileDirChecker,
 				DirCreator:  dirCreator,
 				FileCreator: fileCreator,
 			}
@@ -43,8 +64,11 @@ var _ = Describe("Generator", func() {
 		It("should return an error if an error occurred during the folder creation", func() {
 			dirCreator := &mocks.DirCreator{}
 			dirCreator.DirCreateCall.Returns.Error = errors.New("error")
+			fileDirChecker := &mocks.FileDirChecker{}
+			fileDirChecker.FileDirExistsCall.Returns.Bool = true
 
 			command := commands.Generator{
+				FileDirChecker: fileDirChecker,
 				DirCreator: dirCreator,
 			}
 
@@ -58,8 +82,11 @@ var _ = Describe("Generator", func() {
 
 			fileCreator := &mocks.FileCreator{}
 			fileCreator.FileCreateCall.Returns.Errors.OnCall = -1
+			fileDirChecker := &mocks.FileDirChecker{}
+			fileDirChecker.FileDirExistsCall.Returns.Bool = true
 
 			command := commands.Generator{
+				FileDirChecker: fileDirChecker,
 				DirCreator:  dirCreator,
 				FileCreator: fileCreator,
 			}
@@ -82,8 +109,11 @@ var _ = Describe("Generator", func() {
 			fileCreator := &mocks.FileCreator{}
 			fileCreator.FileCreateCall.Returns.Errors.OnCall = 1
 			fileCreator.FileCreateCall.Returns.Errors.Error = errors.New("error")
+			fileDirChecker := &mocks.FileDirChecker{}
+			fileDirChecker.FileDirExistsCall.Returns.Bool = true
 
 			command := commands.Generator{
+				FileDirChecker: fileDirChecker,
 				DirCreator:  dirCreator,
 				FileCreator: fileCreator,
 			}
@@ -99,8 +129,11 @@ var _ = Describe("Generator", func() {
 			fileCreator := &mocks.FileCreator{}
 			fileCreator.FileCreateCall.Returns.Errors.OnCall = 2
 			fileCreator.FileCreateCall.Returns.Errors.Error = errors.New("error")
+			fileDirChecker := &mocks.FileDirChecker{}
+			fileDirChecker.FileDirExistsCall.Returns.Bool = true
 
 			command := commands.Generator{
+				FileDirChecker: fileDirChecker,
 				DirCreator:  dirCreator,
 				FileCreator: fileCreator,
 			}

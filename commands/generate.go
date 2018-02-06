@@ -10,12 +10,14 @@ import (
 )
 
 type Generator struct {
-	DirCreator  util.DirCreatorInterface
-	FileCreator util.FileCreatorInterface
+	FileDirChecker util.FileDirCheckerInterface
+	DirCreator     util.DirCreatorInterface
+	FileCreator    util.FileCreatorInterface
 }
 
 func NewGenerator() *Generator {
 	return &Generator{
+		&util.FileDirChecker{},
 		&util.DirCreator{},
 		&util.FileCreator{},
 	}
@@ -28,6 +30,13 @@ func (g *Generator) Run(args ...string) error {
 
 	currTime := time.Now()
 	timeFormatted := currTime.Format("20060102150405")
+
+	schemaPath := []string{"db", "schema.sql"}
+
+	if ok := g.FileDirChecker.FileDirExists(strings.Join(schemaPath, "/")); !ok {
+		return errors.New("generate: schema.sql file does not exist")
+	}
+
 	migrationDir := timeFormatted + "_" + args[0]
 
 	path := []string{"db", "migrations", migrationDir}
