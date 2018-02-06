@@ -9,3 +9,9 @@ gom:
 test:
 	$(GO) test $(BASE_PKG)/util
 	$(GO) test $(BASE_PKG)/commands
+
+fmt:
+	$(GO) fmt $(BASE_PKG)/util
+	$(GO) fmt $(BASE_PKG)/commands
+	$(GO) fmt $(BASE_PKG)/mocks
+	$(GO) fmt $(BASE_PKG)/cmd/gom
