@@ -14,8 +14,6 @@ import (
 	_ "github.com/lib/pq"
 )
 
-var db *sql.DB
-
 var _ = Describe("Initializer", func() {
 	BeforeEach(func() {
 		var err error
@@ -33,7 +31,10 @@ var _ = Describe("Initializer", func() {
 	Describe("#Run", func() {
 		It("should create a table called schema_migrations", func() {
 			dirCreator := &mocks.DirCreator{}
+
 			fileChecker := &mocks.FileDirChecker{}
+			fileChecker.FileDirExistsCall.Returns.Bool = []bool{true}
+
 			fileWriter := &mocks.FileWriter{}
 
 			command := commands.Initializer{
@@ -56,7 +57,10 @@ var _ = Describe("Initializer", func() {
 
 		It("should try to create the correct directory", func() {
 			dirCreator := &mocks.DirCreator{}
+
 			fileChecker := &mocks.FileDirChecker{}
+			fileChecker.FileDirExistsCall.Returns.Bool = []bool{true}
+
 			fileWriter := &mocks.FileWriter{}
 
 			command := commands.Initializer{
@@ -81,7 +85,9 @@ var _ = Describe("Initializer", func() {
 		It("should return an error if an error occurred during the folder creation", func() {
 			dirCreator := &mocks.DirCreator{}
 			dirCreator.DirCreateCall.Returns.Error = errors.New("error")
+
 			fileChecker := &mocks.FileDirChecker{}
+			fileChecker.FileDirExistsCall.Returns.Bool = []bool{true}
 
 			command := commands.Initializer{
 				DB:             db,
@@ -98,7 +104,7 @@ var _ = Describe("Initializer", func() {
 			dirCreator := &mocks.DirCreator{}
 
 			fileChecker := &mocks.FileDirChecker{}
-			fileChecker.FileDirExistsCall.Returns.Bool = false
+			fileChecker.FileDirExistsCall.Returns.Bool = []bool{false}
 
 			fileWriter := &mocks.FileWriter{}
 
@@ -119,7 +125,7 @@ var _ = Describe("Initializer", func() {
 			dirCreator := &mocks.DirCreator{}
 
 			fileChecker := &mocks.FileDirChecker{}
-			fileChecker.FileDirExistsCall.Returns.Bool = true
+			fileChecker.FileDirExistsCall.Returns.Bool = []bool{true}
 
 			fileWriter := &mocks.FileWriter{}
 
@@ -140,7 +146,7 @@ var _ = Describe("Initializer", func() {
 			dirCreator := &mocks.DirCreator{}
 
 			fileChecker := &mocks.FileDirChecker{}
-			fileChecker.FileDirExistsCall.Returns.Bool = false
+			fileChecker.FileDirExistsCall.Returns.Bool = []bool{false}
 
 			fileWriter := &mocks.FileWriter{}
 			fileWriter.WriteCall.Returns.Error = errors.New("error")
@@ -158,7 +164,10 @@ var _ = Describe("Initializer", func() {
 
 		It("should return no error when ran correctly", func() {
 			dirCreator := &mocks.DirCreator{}
+
 			fileChecker := &mocks.FileDirChecker{}
+			fileChecker.FileDirExistsCall.Returns.Bool = []bool{true}
+
 			fileWriter := &mocks.FileWriter{}
 
 			command := commands.Initializer{

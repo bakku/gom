@@ -21,7 +21,7 @@ var _ = Describe("Generator", func() {
 
 		It("should return an error if schema.sql file does not exist", func() {
 			fileDirChecker := &mocks.FileDirChecker{}
-			fileDirChecker.FileDirExistsCall.Returns.Bool = false
+			fileDirChecker.FileDirExistsCall.Returns.Bool = []bool{false}
 
 			fileAppender := &mocks.FileAppender{}
 
@@ -42,7 +42,7 @@ var _ = Describe("Generator", func() {
 
 		It("should append new migration insert into schema.sql file", func() {
 			fileDirChecker := &mocks.FileDirChecker{}
-			fileDirChecker.FileDirExistsCall.Returns.Bool = true
+			fileDirChecker.FileDirExistsCall.Returns.Bool = []bool{true}
 
 			fileAppender := &mocks.FileAppender{}
 
@@ -65,7 +65,7 @@ var _ = Describe("Generator", func() {
 
 		It("should return an error if schema append returns an error", func() {
 			fileDirChecker := &mocks.FileDirChecker{}
-			fileDirChecker.FileDirExistsCall.Returns.Bool = true
+			fileDirChecker.FileDirExistsCall.Returns.Bool = []bool{true}
 
 			fileAppender := &mocks.FileAppender{}
 			fileAppender.AppendCall.Returns.Error = errors.New("error")
@@ -87,7 +87,7 @@ var _ = Describe("Generator", func() {
 
 		It("should try to create the correct directory", func() {
 			fileDirChecker := &mocks.FileDirChecker{}
-			fileDirChecker.FileDirExistsCall.Returns.Bool = true
+			fileDirChecker.FileDirExistsCall.Returns.Bool = []bool{true}
 
 			fileAppender := &mocks.FileAppender{}
 
@@ -115,7 +115,7 @@ var _ = Describe("Generator", func() {
 
 		It("should return an error if an error occurred during the folder creation", func() {
 			fileDirChecker := &mocks.FileDirChecker{}
-			fileDirChecker.FileDirExistsCall.Returns.Bool = true
+			fileDirChecker.FileDirExistsCall.Returns.Bool = []bool{true}
 
 			fileAppender := &mocks.FileAppender{}
 
@@ -135,7 +135,7 @@ var _ = Describe("Generator", func() {
 
 		It("should try to create up.sql and down.sql", func() {
 			fileDirChecker := &mocks.FileDirChecker{}
-			fileDirChecker.FileDirExistsCall.Returns.Bool = true
+			fileDirChecker.FileDirExistsCall.Returns.Bool = []bool{true}
 
 			fileAppender := &mocks.FileAppender{}
 
@@ -165,7 +165,7 @@ var _ = Describe("Generator", func() {
 
 		It("should return an error if an error occured during up.sql creation", func() {
 			fileDirChecker := &mocks.FileDirChecker{}
-			fileDirChecker.FileDirExistsCall.Returns.Bool = true
+			fileDirChecker.FileDirExistsCall.Returns.Bool = []bool{true}
 
 			fileAppender := &mocks.FileAppender{}
 
@@ -189,7 +189,7 @@ var _ = Describe("Generator", func() {
 
 		It("should return an error if an error occured during down.sql creation", func() {
 			fileDirChecker := &mocks.FileDirChecker{}
-			fileDirChecker.FileDirExistsCall.Returns.Bool = true
+			fileDirChecker.FileDirExistsCall.Returns.Bool = []bool{true}
 
 			fileAppender := &mocks.FileAppender{}
 

@@ -82,3 +82,18 @@ func (f *FileAppender) Append(path, content string) error {
 
 	return nil
 }
+
+type FileReaderInterface interface {
+	Read(path string) (string, error)
+}
+
+type FileReader struct{}
+
+func (f *FileReader) Read(path string) (string, error) {
+	bytes, err := ioutil.ReadFile(path)
+	if err != nil {
+		return "", nil
+	}
+
+	return string(bytes), nil
+}
