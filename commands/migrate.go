@@ -9,13 +9,28 @@ import (
 	"github.com/bakku/gom/util"
 )
 
-const query = "SELECT migration FROM schema_migrations;"
+const query = "SELECT migration FROM schema_migrations ;"
+const migrationInsertStmt = "INSERT INTO schema_migrations VALUES ('%s') ;"
 
 type Migrator struct {
 	FileDirChecker util.FileDirCheckerInterface
 	DirReader      util.DirReaderInterface
 	DB             *sql.DB
 	FileReader     util.FileReaderInterface
+}
+
+func NewMigrator() (*Migrator, error) {
+	db, err := util.InitDB()
+	if err != nil {
+		return nil, errors.New(fmt.Sprintf("migrate: %v", err))
+	}
+
+	return &Migrator{
+		&util.FileDirChecker{},
+		&util.DirReader{},
+		db,
+		&util.FileReader{},
+	}, nil
 }
 
 func (m *Migrator) Run(args ...string) error {
@@ -48,6 +63,13 @@ func (m *Migrator) Run(args ...string) error {
 		_, err = m.DB.Exec(stmt)
 		if err != nil {
 			return errors.New(fmt.Sprintf("migrate: could not execute migration: %v", err))
+		}
+
+		timestamp := m.getTimestampFromMigrationName(migration)
+
+		_, err = m.DB.Exec(fmt.Sprintf(migrationInsertStmt, timestamp))
+		if err != nil {
+			return errors.New(fmt.Sprintf("migrate: could not insert migration timestamp: %v", err))
 		}
 	}
 
@@ -104,7 +126,7 @@ func (m *Migrator) getMigrationsToMigrate(available, migrated []string) []string
 	var migrationsToMigrate []string
 
 	for _, avail := range available {
-		timestamp := strings.Split(avail, "_")[0]
+		timestamp := m.getTimestampFromMigrationName(avail)
 
 		if sliceContains(migrated, timestamp) == false {
 			migrationsToMigrate = append(migrationsToMigrate, avail)
@@ -112,6 +134,10 @@ func (m *Migrator) getMigrationsToMigrate(available, migrated []string) []string
 	}
 
 	return migrationsToMigrate
+}
+
+func (m *Migrator) getTimestampFromMigrationName(migration string) string {
+	return strings.Split(migration, "_")[0]
 }
 
 func sliceContains(slice []string, str string) bool {
@@ -123,3 +149,4 @@ func sliceContains(slice []string, str string) bool {
 
 	return false
 }
+

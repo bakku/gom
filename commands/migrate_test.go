@@ -197,5 +197,46 @@ var _ = Describe("Migrate", func() {
 			Expect(err).NotTo(HaveOccurred())
 			Expect(exists).To(Equal(true))
 		})
+
+		It("should insert the migration into the schema_migrations table", func() {
+			db.Exec("INSERT INTO schema_migrations (migration) VALUES ('20180101000000');")
+
+			fileDirChecker := &mocks.FileDirChecker{}
+			fileDirChecker.FileDirExistsCall.Returns.Bool = []bool{true, true, true}
+
+			dirReader := &mocks.DirReader{}
+			dirReader.ReadCall.Returns.DirSlice = []os.FileInfo{
+				&mocks.FileInfo{
+					N: "20180101000000_create_users_table",
+				},
+				&mocks.FileInfo{
+					N: "20180202123456_create_posts_table",
+				},
+			}
+
+			fileReader := &mocks.FileReader{}
+			fileReader.ReadCall.Returns.String = []string{
+				"BEGIN; CREATE TABLE posts ( id SERIAL, title TEXT ) ; COMMIT;",
+			}
+
+			fileReader.ReadCall.Returns.Error = []error{nil}
+
+			command := commands.Migrator{
+				FileDirChecker: fileDirChecker,
+				DirReader:      dirReader,
+				DB:             db,
+				FileReader:     fileReader,
+			}
+
+			err := command.Run()
+			Expect(err).NotTo(HaveOccurred())
+
+			var exists bool
+
+			err = db.QueryRow("SELECT EXISTS ( SELECT * FROM schema_migrations WHERE migration = '20180202123456' );").Scan(&exists)
+
+			Expect(err).NotTo(HaveOccurred())
+			Expect(exists).To(Equal(true))
+		})
 	})
 })

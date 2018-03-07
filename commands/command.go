@@ -14,7 +14,7 @@ func Select(command string) (Command, error) {
 	case "generate":
 		return NewGenerator(), nil
 	case "migrate":
-		return &Migrator{}, nil
+		return NewMigrator()
 	case "init":
 		return NewInitializer()
 	case "rollback":
