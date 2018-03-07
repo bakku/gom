@@ -9,6 +9,8 @@ import (
 	_ "github.com/lib/pq"
 )
 
+const schemaMigrationsQuery = "SELECT migration FROM schema_migrations ;"
+
 func InitDB() (*sql.DB, error) {
 	dbUrl := os.Getenv("DATABASE_URL")
 
@@ -22,4 +24,32 @@ func InitDB() (*sql.DB, error) {
 	}
 
 	return db, nil
+}
+
+func GetSchemaMigrations(db *sql.DB) ([]string, error) {
+	rows, err := db.Query(schemaMigrationsQuery)
+	if err != nil {
+		return nil, errors.New(fmt.Sprintf("db: could not query schema_migrations: %v", err))
+	}
+
+	defer rows.Close()
+
+	var migrations []string
+
+	for rows.Next() {
+		var migration string
+
+		if err = rows.Scan(&migration); err != nil {
+			return nil, errors.New(fmt.Sprintf("db: could not query schema_migrations: %v", err))
+		}
+
+		migrations = append(migrations, migration)
+	}
+
+	if err = rows.Err(); err != nil {
+		return nil, errors.New(fmt.Sprintf("db: could not query schema_migrations: %v", err))
+	}
+
+	return migrations, nil
+
 }

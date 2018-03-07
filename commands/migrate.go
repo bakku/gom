@@ -9,7 +9,6 @@ import (
 	"github.com/bakku/gom/util"
 )
 
-const query = "SELECT migration FROM schema_migrations ;"
 const migrationInsertStmt = "INSERT INTO schema_migrations VALUES ('%s') ;"
 
 type Migrator struct {
@@ -39,7 +38,7 @@ func (m *Migrator) Run(args ...string) error {
 		return err
 	}
 
-	migratedMigrations, err := m.fetchMigratedMigrations()
+	migratedMigrations, err := util.GetSchemaMigrations(m.DB)
 	if err != nil {
 		return err
 	}
@@ -93,33 +92,6 @@ func (m *Migrator) fetchAvailableMigrations() ([]string, error) {
 	}
 
 	return names, nil
-}
-
-func (m *Migrator) fetchMigratedMigrations() ([]string, error) {
-	rows, err := m.DB.Query(query)
-	if err != nil {
-		return nil, errors.New(fmt.Sprintf("migrate: could not query schema_migrations: %v", err))
-	}
-
-	defer rows.Close()
-
-	var migrations []string
-
-	for rows.Next() {
-		var migration string
-
-		if err = rows.Scan(&migration); err != nil {
-			return nil, errors.New(fmt.Sprintf("migrate: could not query schema_migrations: %v", err))
-		}
-
-		migrations = append(migrations, migration)
-	}
-
-	if err = rows.Err(); err != nil {
-		return nil, errors.New(fmt.Sprintf("migrate: could not query schema_migrations: %v", err))
-	}
-
-	return migrations, nil
 }
 
 func (m *Migrator) getMigrationsToMigrate(available, migrated []string) []string {
