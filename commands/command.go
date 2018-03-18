@@ -18,7 +18,7 @@ func Select(command string) (Command, error) {
 	case "init":
 		return NewInitializer()
 	case "rollback":
-		return &Backroller{}, nil
+		return NewBackroller()
 	default:
 		return nil, errors.New(fmt.Sprintf("the command '%s' does not exist", command))
 	}

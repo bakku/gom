@@ -33,7 +33,7 @@ func NewMigrator() (*Migrator, error) {
 }
 
 func (m *Migrator) Run(args ...string) error {
-	availableMigrations, err := m.fetchAvailableMigrations()
+	availableMigrations, err := fetchAvailableMigrations(m.FileDirChecker, m.DirReader)
 	if err != nil {
 		return err
 	}
@@ -75,25 +75,6 @@ func (m *Migrator) Run(args ...string) error {
 	return nil
 }
 
-func (m *Migrator) fetchAvailableMigrations() ([]string, error) {
-	if m.FileDirChecker.FileDirExists("db/migrations") == false {
-		return nil, errors.New("migrate: migrations directory does not exist")
-	}
-
-	dirs, err := m.DirReader.Read("db/migrations")
-	if err != nil {
-		return nil, errors.New(fmt.Sprintf("migrate: could not read migrations directory: %v", err))
-	}
-
-	names := make([]string, len(dirs))
-
-	for i, v := range dirs {
-		names[i] = v.Name()
-	}
-
-	return names, nil
-}
-
 func (m *Migrator) getMigrationsToMigrate(available, migrated []string) []string {
 	var migrationsToMigrate []string
 
@@ -121,4 +102,3 @@ func sliceContains(slice []string, str string) bool {
 
 	return false
 }
-
